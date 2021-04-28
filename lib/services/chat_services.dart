@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:talk/models/chat.dart';
 import 'package:talk/models/message.dart';
 import 'package:talk/models/service_response.dart';
+import 'package:talk/models/user.dart';
 import 'package:talk/utils/service_constats.dart';
 
 class ChatServices {
@@ -74,6 +75,45 @@ class ChatServices {
         done: false,
         errorText: e.toString(),
       );
+    }
+  }
+
+  Future<ServiceResponse> createChat({List<User> chatUsers}) async {
+    try {
+      var chatExist =
+          await isChatExist(firstUser: chatUsers[0], secondUser: chatUsers[1]);
+
+      if (chatExist.data) {
+        var newChatId = chatUsers.map((e) => e.id).toList().join("+");
+        var newChat = Chat(chatId: newChatId, users: chatUsers);
+
+        await store.collection(chatsCollection).doc(newChatId).set(
+              newChat.toJson(),
+            );
+        return ServiceResponse(data: newChat, done: true);
+      } else {
+        return ServiceResponse(data: chatAlreadyExist, done: true);
+      }
+    } catch (e) {
+      return ServiceResponse(done: false, errorText: e.toString());
+    }
+  }
+
+  Future<ServiceResponse> isChatExist({User firstUser, User secondUser}) async {
+    try {
+      var chatIdVariantOne = firstUser.id + "+" + secondUser.id;
+      var chatIdVariantTwo = secondUser.id + "+" + firstUser.id;
+
+      var chatExistWithVariantOne =
+          await store.collection(chatsCollection).doc(chatIdVariantOne).get();
+      var chatExistWithVariantTwo =
+          await store.collection(chatsCollection).doc(chatIdVariantTwo).get();
+      if (chatExistWithVariantTwo.exists || chatExistWithVariantOne.exists) {
+        return ServiceResponse(data: true, done: true);
+      }
+      return ServiceResponse(data: false, done: true);
+    } catch (e) {
+      return ServiceResponse(done: false, errorText: e.toString());
     }
   }
 }
