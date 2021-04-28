@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "1038154688131",
+    "project_id": "italk-615ae",
+    "storage_bucket": "italk-615ae.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1038154688131:android:a810f135b8481786ce9db6",
+        "android_client_info": {
+          "package_name": "com.example.italk"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1038154688131-tgsj49n2903pa8355kodk1nd1uu095ie.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDhMNXm8QJThQXTIfqnudCue3L4F_H16-w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1038154688131-tgsj49n2903pa8355kodk1nd1uu095ie.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1038154688131:android:5a29752e11d44024ce9db6",
+        "android_client_info": {
+          "package_name": "com.example.talk"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1038154688131-tgsj49n2903pa8355kodk1nd1uu095ie.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDhMNXm8QJThQXTIfqnudCue3L4F_H16-w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1038154688131-tgsj49n2903pa8355kodk1nd1uu095ie.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
