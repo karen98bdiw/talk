@@ -3,12 +3,14 @@ class User {
   String email;
   String nickName;
   String imageLink;
+  List<String> userChats = [];
 
   User({
     this.id,
     this.email,
     this.imageLink,
     this.nickName,
+    this.userChats,
   });
 
   Map<String, dynamic> toJson() {

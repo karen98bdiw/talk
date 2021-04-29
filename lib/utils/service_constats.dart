@@ -6,3 +6,4 @@ var chatAlreadyExist = "Chat Already Exist";
 var usersCollection = "users";
 var chatsCollection = "chats";
 var messagesCollection = "messages";
+var userChats = "userChats";

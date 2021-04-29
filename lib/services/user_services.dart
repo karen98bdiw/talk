@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:talk/models/service_response.dart';
@@ -7,6 +9,8 @@ import '../models/user.dart' as customUser;
 class UserServices {
   final FirebaseAuth auth;
   final FirebaseFirestore store;
+
+  customUser.User curentUser;
 
   UserServices({this.auth, this.store});
 
@@ -47,6 +51,31 @@ class UserServices {
     }
   }
 
+  Future<ServiceResponse> signIn({String email, String password}) async {
+    try {
+      var res = await auth.signInWithEmailAndPassword(
+          email: email, password: password);
+
+      if (res.user == null)
+        return ServiceResponse(errorText: userNotExist, done: true);
+
+      var userResponse = await getUserById(userId: res.user.uid);
+
+      curentUser = userResponse.data;
+
+      if (userResponse.errorText == null) {
+        return ServiceResponse(done: true, data: userResponse.data);
+      }
+
+      return ServiceResponse(done: true, errorText: userResponse.errorText);
+    } catch (e) {
+      return ServiceResponse(
+        errorText: e.toString(),
+        done: false,
+      );
+    }
+  }
+
   Future<ServiceResponse> getUserById({String userId}) async {
     try {
       var res = await store.collection(usersCollection).doc(userId).get();
@@ -65,6 +94,24 @@ class UserServices {
         done: false,
         errorText: e.toString(),
       );
+    }
+  }
+
+  Future<ServiceResponse> getAllUsers() async {
+    try {
+      List<customUser.User> users = [];
+
+      var res = await store.collection(usersCollection).get();
+
+      res.docs.forEach((element) {
+        users.add(customUser.User.fromJson(element));
+      });
+
+      users.removeWhere((element) => element.id == curentUser.id);
+
+      return ServiceResponse(data: users, done: true);
+    } catch (e) {
+      return ServiceResponse(data: false, errorText: appServiceError);
     }
   }
 }

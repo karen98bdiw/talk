@@ -29,7 +29,7 @@ class Chat {
     var data = Map<String, dynamic>();
     data["chatId"] = this.chatId;
     data["lastMessage"] = this.lastMessage;
-    data["messages"] = this.messages.map((e) => e.toJson()).toList();
+    // data["messages"] = this.messages != null ?  this.messages.map((e) => e.toJson()).toList();
     data["users"] = this.users.map((e) => e.toJson()).toList();
     return data;
   }

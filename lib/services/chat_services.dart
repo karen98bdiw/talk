@@ -3,6 +3,7 @@ import 'package:talk/models/chat.dart';
 import 'package:talk/models/message.dart';
 import 'package:talk/models/service_response.dart';
 import 'package:talk/models/user.dart';
+import 'package:talk/services/talk_base.dart';
 import 'package:talk/utils/service_constats.dart';
 
 class ChatServices {
@@ -14,7 +15,7 @@ class ChatServices {
     try {
       var res = await store.collection(chatsCollection).doc(chatId).get();
       if (res.exists) {
-        ServiceResponse(
+        return ServiceResponse(
           data: Chat.fromJson(res.data()),
           done: true,
         );
@@ -29,6 +30,25 @@ class ChatServices {
         errorText: e.toString(),
       );
     }
+  }
+
+  Future<ServiceResponse> userAllChats({String userId}) async {
+    List<Chat> chats = [];
+    var userChatsRef = await store
+        .collection(usersCollection)
+        .doc(TalkBase().userServices.curentUser.id)
+        .collection(userChats)
+        .get();
+
+    for (int i = 0; i < userChatsRef.docs.length; i++) {
+      var chatResponse =
+          await getChatById(chatId: userChatsRef.docs[i]["chatId"]);
+      print(chatResponse.errorText);
+      if (chatResponse.errorText == null) {
+        chats.add(chatResponse.data);
+      }
+    }
+    return ServiceResponse(done: true, data: chats);
   }
 
   Future<ServiceResponse> chatMessagesStream({String chatId}) async {
@@ -82,14 +102,25 @@ class ChatServices {
     try {
       var chatExist =
           await isChatExist(firstUser: chatUsers[0], secondUser: chatUsers[1]);
+      print("chatExist :${chatExist.data}");
 
-      if (chatExist.data) {
+      if (!chatExist.data) {
         var newChatId = chatUsers.map((e) => e.id).toList().join("+");
         var newChat = Chat(chatId: newChatId, users: chatUsers);
 
         await store.collection(chatsCollection).doc(newChatId).set(
               newChat.toJson(),
             );
+        await store
+            .collection(usersCollection)
+            .doc(chatUsers[0].id)
+            .collection(userChats)
+            .add({"chatId": newChatId});
+        await store
+            .collection(usersCollection)
+            .doc(chatUsers[1].id)
+            .collection(userChats)
+            .add({"chatId": newChatId});
         return ServiceResponse(data: newChat, done: true);
       } else {
         return ServiceResponse(data: chatAlreadyExist, done: true);
