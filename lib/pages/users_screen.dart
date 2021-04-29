@@ -15,6 +15,7 @@ class _UsersScreenState extends State<UsersScreen> {
   @override
   void initState() {
     getAllUsers();
+
     super.initState();
   }
 

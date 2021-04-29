@@ -16,15 +16,26 @@ class _ChatsScreenState extends State<ChatsScreen> {
   @override
   void initState() {
     getAllChats();
+    if (mounted) {
+      (TalkBase().chatServices.userChatsStream().data as Stream)
+          .listen((event) {
+        if (mounted) {
+          print("setStateCalling");
+          getAllChats();
+        }
+      });
+    }
     super.initState();
   }
 
   void getAllChats() async {
     var res = await TalkBase().chatServices.userAllChats();
     if (res.data.length > 0) {
-      setState(() {
-        allChats = res.data;
-      });
+      if (mounted) {
+        setState(() {
+          allChats = res.data;
+        });
+      }
     }
   }
 
