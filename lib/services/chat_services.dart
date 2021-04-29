@@ -51,7 +51,7 @@ class ChatServices {
     return ServiceResponse(done: true, data: chats);
   }
 
-  Future<ServiceResponse> chatMessagesStream({String chatId}) async {
+  ServiceResponse chatMessagesStream({String chatId}) {
     try {
       var messagesStream = store
           .collection(chatsCollection)
@@ -82,7 +82,8 @@ class ChatServices {
           .collection(chatsCollection)
           .doc(chatId)
           .collection(messagesCollection)
-          .add(message.toJson());
+          .doc(message.dateTime.toString())
+          .set(message.toJson());
       await store
           .collection(chatsCollection)
           .doc(chatId)

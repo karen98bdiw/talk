@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:talk/pages/home.dart';
 import 'package:talk/pages/users_screen.dart';
 import 'package:talk/services/talk_base.dart';
 
@@ -23,8 +24,7 @@ class _SignInScreenState extends State<SignInScreen> {
 
     if (res.errorText == null) {
       print("user signed ");
-      Navigator.of(context)
-          .push(MaterialPageRoute(builder: (c) => UsersScreen()));
+      Navigator.of(context).push(MaterialPageRoute(builder: (c) => Home()));
     } else {
       print("user not signed");
     }

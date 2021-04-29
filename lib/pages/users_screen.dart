@@ -11,12 +11,10 @@ class UsersScreen extends StatefulWidget {
 
 class _UsersScreenState extends State<UsersScreen> {
   List<User> allUser = [];
-  List<Chat> allChats = [];
 
   @override
   void initState() {
     getAllUsers();
-    getAllChats();
     super.initState();
   }
 
@@ -32,21 +30,9 @@ class _UsersScreenState extends State<UsersScreen> {
     }
   }
 
-  void getAllChats() async {
-    var res = await TalkBase().chatServices.userAllChats();
-    if (res.data.length > 0) {
-      setState(() {
-        allChats = res.data;
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("All Users"),
-      ),
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -66,19 +52,6 @@ class _UsersScreenState extends State<UsersScreen> {
                   subtitle: Text(allUser[i].email),
                 ),
                 itemCount: allUser.length,
-              ),
-            ),
-            Divider(
-              thickness: 3,
-            ),
-            Container(
-              height: MediaQuery.of(context).size.height * 0.5,
-              child: ListView.builder(
-                itemBuilder: (c, i) => ListTile(
-                  title: Text(allChats[i].chatId),
-                  subtitle: Text(allChats[i].chatId),
-                ),
-                itemCount: allChats.length,
               ),
             ),
           ],
