@@ -12,16 +12,18 @@ class Chat {
   factory Chat.fromJson(json) {
     var chat = Chat(
       chatId: json["chatId"],
-      lastMessage: json["lastMessage"],
-      messages: json["messages"] != null
-          ? (json["messages"] as List).map((e) => Message.fromJson(e)).toList()
-          : [],
+      lastMessage: json["lastMessage"] != null
+          ? Message.fromJson(json["lastMessage"])
+          : null,
+      // messages: json["messages"] != null
+      //     ? (json["messages"] as List).map((e) => Message.fromJson(e)).toList()
+      //     : [],
       users: json["users"] != null
           ? (json["users"] as List).map((e) => User.fromJson(e)).toList()
           : [],
     );
-    chat.messages
-        .sort((a, b) => a.dateTime.toString().compareTo(b.dateTime.toString()));
+    // chat.messages
+    //     .sort((a, b) => a.dateTime.toString().compareTo(b.dateTime.toString()));
     return chat;
   }
 

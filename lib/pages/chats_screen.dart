@@ -42,8 +42,12 @@ class _ChatsScreenState extends State<ChatsScreen> {
                 ),
               );
             },
-            title: Text(allChats[i].chatId),
-            subtitle: Text(allChats[i].chatId),
+            title: Text(allChats[i]
+                .users
+                .firstWhere((element) =>
+                    element.id != TalkBase().userServices.curentUser.id)
+                .nickName),
+            subtitle: Text(allChats[i].lastMessage?.text ?? ""),
           ),
           itemCount: allChats.length,
         ),

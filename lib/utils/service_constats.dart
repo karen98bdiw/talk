@@ -5,5 +5,6 @@ var messagesIsNotBrodcasting = "Messagis is not responding";
 var chatAlreadyExist = "Chat Already Exist";
 var usersCollection = "users";
 var chatsCollection = "chats";
+var lastMessage = "lastMessage";
 var messagesCollection = "messages";
 var userChats = "userChats";

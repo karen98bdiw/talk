@@ -32,6 +32,17 @@ class ChatServices {
     }
   }
 
+  ServiceResponse userChatsStream({String userId}) {
+    return ServiceResponse(
+      done: true,
+      data: store
+          .collection(usersCollection)
+          .doc(TalkBase().userServices.curentUser.id)
+          .collection(userChats)
+          .snapshots(),
+    );
+  }
+
   Future<ServiceResponse> userAllChats({String userId}) async {
     List<Chat> chats = [];
     var userChatsRef = await store
@@ -43,10 +54,10 @@ class ChatServices {
     for (int i = 0; i < userChatsRef.docs.length; i++) {
       var chatResponse =
           await getChatById(chatId: userChatsRef.docs[i]["chatId"]);
-      print(chatResponse.errorText);
       if (chatResponse.errorText == null) {
         chats.add(chatResponse.data);
       }
+      print(chats);
     }
     return ServiceResponse(done: true, data: chats);
   }
@@ -87,7 +98,9 @@ class ChatServices {
       await store
           .collection(chatsCollection)
           .doc(chatId)
-          .update({"lastMessage": message.toJson()});
+          .collection(lastMessage)
+          .doc("0")
+          .set({"lastMessage": message.toJson()});
       return ServiceResponse(
         done: true,
       );
