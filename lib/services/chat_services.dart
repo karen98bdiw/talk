@@ -100,7 +100,7 @@ class ChatServices {
           .doc(chatId)
           .collection(lastMessage)
           .doc("0")
-          .set({"lastMessage": message.toJson()});
+          .set({lastMessage: message.toJson()});
       return ServiceResponse(
         done: true,
       );
@@ -110,6 +110,18 @@ class ChatServices {
         errorText: e.toString(),
       );
     }
+  }
+
+  ServiceResponse lastMessageStream({String chatId}) {
+    return ServiceResponse(
+      done: true,
+      data: store
+          .collection(chatsCollection)
+          .doc(chatId)
+          .collection(lastMessage)
+          .doc("0")
+          .snapshots(),
+    );
   }
 
   Future<ServiceResponse> createChat({List<User> chatUsers}) async {

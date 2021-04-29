@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:talk/models/chat.dart';
+import 'package:talk/models/message.dart';
 import 'package:talk/pages/chat_screen.dart';
 import 'package:talk/services/talk_base.dart';
+import 'package:talk/utils/service_constats.dart';
 
 class ChatsScreen extends StatefulWidget {
   @override
@@ -47,7 +49,25 @@ class _ChatsScreenState extends State<ChatsScreen> {
                 .firstWhere((element) =>
                     element.id != TalkBase().userServices.curentUser.id)
                 .nickName),
-            subtitle: Text(allChats[i].lastMessage?.text ?? ""),
+            subtitle: StreamBuilder(
+              builder: (c, s) {
+                switch (s.connectionState) {
+                  case ConnectionState.active:
+                    return s.data.data() != null
+                        ? Text(
+                            s.data.data()[lastMessage]["text"] ?? "not exist")
+                        : Text("chat is empty");
+
+                    break;
+                  default:
+                }
+                return Text("null");
+              },
+              stream: TalkBase()
+                  .chatServices
+                  .lastMessageStream(chatId: allChats[i].chatId)
+                  .data,
+            ),
           ),
           itemCount: allChats.length,
         ),
