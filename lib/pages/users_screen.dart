@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:talk/models/chat.dart';
 import 'package:talk/models/user.dart';
 import 'package:talk/services/talk_base.dart';
-import 'package:talk/talk_app.dart';
 
 class UsersScreen extends StatefulWidget {
   @override

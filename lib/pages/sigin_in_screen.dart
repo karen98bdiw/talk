@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:keyboard_dismisser/keyboard_dismisser.dart';
 import 'package:talk/pages/home.dart';
-import 'package:talk/pages/users_screen.dart';
 import 'package:talk/services/talk_base.dart';
 import 'package:talk/utils/enums.dart';
 import 'package:talk/utils/helpers.dart';
@@ -26,7 +24,17 @@ class _SignInScreenState extends State<SignInScreen> {
 
   final GlobalKey<FormState> _formState = GlobalKey<FormState>();
 
-  void onSignIn() async {
+  final FocusNode _emailNode = FocusNode();
+  final FocusNode _passwordNode = FocusNode();
+
+  @override
+  void dispose() {
+    _emailNode.dispose();
+    _passwordNode.dispose();
+    super.dispose();
+  }
+
+  void _onSignIn() async {
     if (!_formState.currentState.validate()) return;
     _formState.currentState.save();
     showLoading();
@@ -86,7 +94,7 @@ class _SignInScreenState extends State<SignInScreen> {
         children: [
           CustomBtn(
             title: "Sign In",
-            onClick: onSignIn,
+            onClick: _onSignIn,
           ),
           SizedBox(
             height: 10,
@@ -101,11 +109,19 @@ class _SignInScreenState extends State<SignInScreen> {
         mainAxisSize: MainAxisSize.min,
         children: [
           CustomFormInput(
+            focuseNode: _emailNode,
+            inputAction: TextInputAction.next,
+            onEditingComplate: () {
+              _passwordNode.requestFocus();
+            },
             hint: "E-Mail",
             validator: (v) => emailValidator(v),
             onSaved: (v) => email = v,
           ),
           CustomFormInput(
+            focuseNode: _passwordNode,
+            onEditingComplate: _onSignIn,
+            inputAction: TextInputAction.done,
             obscureText: true,
             hint: "Password",
             onSaved: (v) => password = v,

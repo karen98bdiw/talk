@@ -23,7 +23,6 @@ class _ChatScreenState extends State<ChatScreen> {
     receiverId = widget.chat.users
         .firstWhere((element) => element.id != curentUserId)
         .id;
-    // TODO: implement initState
     super.initState();
   }
 

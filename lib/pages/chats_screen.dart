@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:talk/models/chat.dart';
-import 'package:talk/models/message.dart';
 import 'package:talk/pages/chat_screen.dart';
 import 'package:talk/services/talk_base.dart';
 import 'package:talk/utils/service_constats.dart';

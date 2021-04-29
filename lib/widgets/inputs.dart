@@ -10,8 +10,14 @@ class CustomFormInput extends StatelessWidget {
   final bool obscureText;
   final bool textCentered;
   final TextEditingController controller;
+  final FocusNode focuseNode;
+  final TextInputAction inputAction;
+  final Function onEditingComplate;
 
   CustomFormInput({
+    this.onEditingComplate,
+    this.inputAction,
+    this.focuseNode,
     this.onSaved,
     this.validator,
     this.hint,
@@ -26,6 +32,9 @@ class CustomFormInput extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.only(top: 16),
       child: TextFormField(
+        onEditingComplete: onEditingComplate,
+        textInputAction: inputAction,
+        focusNode: focuseNode,
         controller: controller,
         textAlign: textCentered ? TextAlign.center : TextAlign.start,
         obscureText: obscureText,

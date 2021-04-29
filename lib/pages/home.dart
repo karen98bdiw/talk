@@ -35,7 +35,7 @@ class _HomeState extends State<Home> {
               Icons.person,
               color: Colors.black,
             ),
-            title: Text("Users"),
+            label: "Users",
             activeIcon: Icon(
               Icons.person,
               color: Colors.pink,
@@ -46,7 +46,7 @@ class _HomeState extends State<Home> {
               Icons.message,
               color: Colors.black,
             ),
-            title: Text("Chats"),
+            label: "Chats",
             activeIcon: Icon(
               Icons.message,
               color: Colors.pink,

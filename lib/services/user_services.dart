@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:talk/models/service_response.dart';
@@ -28,11 +26,32 @@ class UserServices {
           userId: res.user.uid,
           user: user,
         );
-        if (storeResponse.done) {
-          return ServiceResponse(done: true);
-        }
-        return ServiceResponse(done: false, errorText: storeResponse.errorText);
+
+        if (storeResponse.errorText != null)
+          return ServiceResponse(
+              done: false, errorText: storeResponse.errorText);
+
+        var signingResponse = await setCurentUser(userId: res.user.uid);
+
+        if (signingResponse.errorText != null)
+          return ServiceResponse(
+              done: false, errorText: signingResponse.errorText);
+
+        print(curentUser.toJson());
+        return ServiceResponse(done: true);
       }
+    } catch (e) {
+      return ServiceResponse(done: false, errorText: e.toString());
+    }
+  }
+
+  Future<ServiceResponse> setCurentUser({userId}) async {
+    try {
+      var res = await getUserById(userId: userId);
+      if (res.errorText != null)
+        return ServiceResponse(done: false, errorText: res.errorText);
+      curentUser = res.data;
+      return ServiceResponse(done: true);
     } catch (e) {
       return ServiceResponse(done: false, errorText: e.toString());
     }
