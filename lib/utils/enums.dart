@@ -3,3 +3,8 @@ enum MessageState {
   Delivered,
   Readed,
 }
+
+enum LoginAction {
+  SignIn,
+  SignUp,
+}
