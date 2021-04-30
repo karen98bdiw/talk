@@ -22,3 +22,6 @@ TextStyle titleStyle({isLight = false}) => TextStyle(
       fontSize: 50,
       fontWeight: FontWeight.w600,
     );
+
+TextStyle midiumTextStyle() =>
+    TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.w400);

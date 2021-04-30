@@ -1,5 +1,8 @@
 import 'package:talk/utils/enums.dart';
 
+var dummyUserImage =
+    "https://library.kissclipart.com/20180901/krw/kissclipart-user-thumbnail-clipart-user-lorem-ipsum-is-simply-bfcb758bf53bea22.jpg";
+
 String messageStateToString(MessageState state) {
   switch (state) {
     case MessageState.Sended:

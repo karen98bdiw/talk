@@ -8,6 +8,7 @@ import 'package:talk/utils/service_constats.dart';
 import 'package:talk/utils/style_helpers.dart';
 import 'package:talk/widgets/buttons.dart';
 import 'package:talk/widgets/helperWidgets.dart';
+import 'package:talk/widgets/inputPrefixes.dart';
 import 'package:talk/widgets/inputs.dart';
 
 class SignInScreen extends StatefulWidget {
@@ -27,6 +28,8 @@ class _SignInScreenState extends State<SignInScreen> {
   final FocusNode _emailNode = FocusNode();
   final FocusNode _passwordNode = FocusNode();
 
+  bool obscurePassword = true;
+
   @override
   void dispose() {
     _emailNode.dispose();
@@ -44,6 +47,7 @@ class _SignInScreenState extends State<SignInScreen> {
         );
     hideLoading();
     if (res.errorText == null) {
+      _formState.currentState.reset();
       Navigator.of(context).push(MaterialPageRoute(builder: (c) => Home()));
     } else {
       await showError(errorText: userNotExist, context: context);
@@ -109,6 +113,7 @@ class _SignInScreenState extends State<SignInScreen> {
         mainAxisSize: MainAxisSize.min,
         children: [
           CustomFormInput(
+            prefix: userPrefix,
             focuseNode: _emailNode,
             inputAction: TextInputAction.next,
             onEditingComplate: () {
@@ -119,10 +124,19 @@ class _SignInScreenState extends State<SignInScreen> {
             onSaved: (v) => email = v,
           ),
           CustomFormInput(
+            prefix: passwordPrefix,
+            sufix: GestureDetector(
+              onTap: () {
+                setState(() {
+                  obscurePassword = !obscurePassword;
+                });
+              },
+              child: passwordSufix,
+            ),
             focuseNode: _passwordNode,
             onEditingComplate: _onSignIn,
             inputAction: TextInputAction.done,
-            obscureText: true,
+            obscureText: obscurePassword,
             hint: "Password",
             onSaved: (v) => password = v,
             validator: (v) => passwordValidator(v),

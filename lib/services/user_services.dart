@@ -95,6 +95,15 @@ class UserServices {
     }
   }
 
+  Future<bool> logOut() async {
+    try {
+      await FirebaseAuth.instance.signOut();
+      return true;
+    } catch (e) {
+      return true;
+    }
+  }
+
   Future<ServiceResponse> getUserById({String userId}) async {
     try {
       var res = await store.collection(usersCollection).doc(userId).get();
@@ -121,7 +130,6 @@ class UserServices {
       List<customUser.User> users = [];
 
       var res = await store.collection(usersCollection).get();
-
       res.docs.forEach((element) {
         users.add(customUser.User.fromJson(element));
       });

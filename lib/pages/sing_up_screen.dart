@@ -8,6 +8,7 @@ import 'package:talk/utils/helpers.dart';
 import 'package:talk/utils/style_helpers.dart';
 import 'package:talk/widgets/buttons.dart';
 import 'package:talk/widgets/helperWidgets.dart';
+import 'package:talk/widgets/inputPrefixes.dart';
 import 'package:talk/widgets/inputs.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -30,6 +31,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final FocusNode repeatNode = FocusNode();
   final TextEditingController passwordController = TextEditingController();
 
+  bool obscurePassword = true;
+  bool obscureRepeatPassword = true;
+
   @override
   void dispose() {
     nickNode.dispose();
@@ -49,6 +53,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
         .createUser(user: user, password: password);
     hideLoading();
     if (res.errorText == null) {
+      _formState.currentState.reset();
+
       Navigator.of(context).push(MaterialPageRoute(builder: (c) => Home()));
     } else {
       showError(errorText: res.errorText, context: context);
@@ -114,6 +120,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         mainAxisSize: MainAxisSize.min,
         children: [
           CustomFormInput(
+            prefix: userPrefix,
             onEditingComplate: () {
               emailNode.requestFocus();
             },
@@ -123,6 +130,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             onSaved: (v) => user.nickName = v,
           ),
           CustomFormInput(
+            prefix: emailPrefix,
             focuseNode: emailNode,
             inputAction: TextInputAction.next,
             onEditingComplate: () {
@@ -133,6 +141,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
             onSaved: (v) => user.email = v,
           ),
           CustomFormInput(
+            prefix: passwordPrefix,
+            sufix: GestureDetector(
+              onTap: () {
+                setState(() {
+                  obscurePassword = !obscurePassword;
+                });
+              },
+              child: passwordSufix,
+            ),
             controller: passwordController,
             inputAction: TextInputAction.next,
             focuseNode: passwordNode,
@@ -145,6 +162,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
             validator: (v) => passwordValidator(v),
           ),
           CustomFormInput(
+            sufix: GestureDetector(
+              onTap: () {
+                setState(() {
+                  obscureRepeatPassword = !obscureRepeatPassword;
+                });
+              },
+              child: passwordSufix,
+            ),
+            prefix: passwordPrefix,
             inputAction: TextInputAction.done,
             focuseNode: repeatNode,
             onEditingComplate: _onSignUp,

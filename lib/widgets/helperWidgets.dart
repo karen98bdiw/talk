@@ -2,9 +2,12 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:talk/pages/sigin_in_screen.dart';
 import 'package:talk/pages/sing_up_screen.dart';
+import 'package:talk/services/talk_base.dart';
+import 'package:talk/talk_app.dart';
 import 'package:talk/utils/enums.dart';
 import 'package:talk/utils/global_keys.dart';
 import 'package:talk/utils/style_helpers.dart';
+import 'package:talk/widgets/buttons.dart';
 
 Widget loginActionChange({LoginAction toAction, BuildContext context}) =>
     RichText(
@@ -83,6 +86,7 @@ showError({String errorText, String title, BuildContext context}) async {
 
 showLoading() async {
   await showDialog(
+    barrierDismissible: false,
     context: navigatorKey.currentContext,
     builder: (c) => Dialog(
       backgroundColor: Colors.transparent,
@@ -129,4 +133,114 @@ showLoading() async {
 
 hideLoading() {
   navigatorKey.currentState.pop();
+}
+
+Future<bool> exitFromAppConfirmation(BuildContext context) async {
+  var res = await showDialog(
+    context: context,
+    builder: (c) => Dialog(
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(13),
+        child: Padding(
+          padding: const EdgeInsets.all(10),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                "Looks like you want to exit app?",
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: CustomBtn(
+                      title: "No",
+                      onClick: () {
+                        Navigator.of(context).pop(false);
+                      },
+                    ),
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Expanded(
+                    child: CustomBtn(
+                      title: "Yes",
+                      onClick: () {
+                        Navigator.of(context).pop(true);
+                      },
+                    ),
+                  ),
+                ],
+              )
+            ],
+          ),
+        ),
+      ),
+    ),
+  );
+
+  return res ?? false;
+}
+
+Future<bool> confirmLogOut({BuildContext context}) async {
+  var res = await showDialog(
+    context: context,
+    builder: (c) => Dialog(
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(13),
+        child: Padding(
+          padding: const EdgeInsets.all(10),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                "Looks like you want to log out?",
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: CustomBtn(
+                      title: "No",
+                      onClick: () {
+                        Navigator.of(context).pop(false);
+                      },
+                    ),
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Expanded(
+                    child: CustomBtn(
+                      title: "Yes",
+                      onClick: () async {
+                        await TalkBase().userServices.logOut();
+
+                        Navigator.of(context).pop(true);
+                      },
+                    ),
+                  ),
+                ],
+              )
+            ],
+          ),
+        ),
+      ),
+    ),
+  );
+
+  return res ?? false;
 }

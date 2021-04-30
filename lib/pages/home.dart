@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:talk/pages/chats_screen.dart';
 import 'package:talk/pages/users_screen.dart';
+import 'package:talk/utils/style_helpers.dart';
+import 'package:talk/widgets/helperWidgets.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -17,12 +19,27 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(_screenIndex == 0 ? "Home Screen" : "Chats Screen"),
+    return WillPopScope(
+      onWillPop: () async {
+        var res = await confirmLogOut(context: context);
+        return res;
+      },
+      child: Scaffold(
+        body: screens[_screenIndex],
+        bottomNavigationBar: bottomNavigation(),
       ),
-      body: screens[_screenIndex],
-      bottomNavigationBar: BottomNavigationBar(
+    );
+  }
+
+  Widget bottomNavigation() => BottomNavigationBar(
+        showSelectedLabels: false,
+        // selectedLabelStyle: TextStyle(
+        //   color: mainBtnColor,
+        //   fontSize: 20,
+        // ),
+        unselectedLabelStyle: TextStyle(
+          fontSize: 17,
+        ),
         currentIndex: _screenIndex,
         onTap: (i) {
           setState(() {
@@ -34,26 +51,28 @@ class _HomeState extends State<Home> {
             icon: Icon(
               Icons.person,
               color: Colors.black,
+              size: 40,
             ),
-            label: "Users",
+            label: "",
             activeIcon: Icon(
               Icons.person,
-              color: Colors.pink,
+              color: mainBtnColor,
+              size: 50,
             ),
           ),
           BottomNavigationBarItem(
             icon: Icon(
               Icons.message,
               color: Colors.black,
+              size: 40,
             ),
-            label: "Chats",
+            label: "",
             activeIcon: Icon(
               Icons.message,
-              color: Colors.pink,
+              color: mainBtnColor,
+              size: 50,
             ),
           ),
         ],
-      ),
-    );
-  }
+      );
 }
