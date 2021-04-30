@@ -1,6 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:talk/services/talk_base.dart';
 import 'package:talk/talk_app.dart';
 
 Future<void> run() async {
@@ -10,6 +12,7 @@ Future<void> run() async {
     DeviceOrientation.portraitUp,
   ]);
   await Firebase.initializeApp();
+
   runApp(TalkApp());
 }
 

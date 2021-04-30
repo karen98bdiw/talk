@@ -1,8 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:keyboard_dismisser/keyboard_dismisser.dart';
 import 'package:talk/pages/home.dart';
 import 'package:talk/services/talk_base.dart';
+import 'package:talk/talk_app.dart';
 import 'package:talk/utils/enums.dart';
+import 'package:talk/utils/global_keys.dart';
 import 'package:talk/utils/helpers.dart';
 import 'package:talk/utils/service_constats.dart';
 import 'package:talk/utils/style_helpers.dart';
@@ -29,6 +32,11 @@ class _SignInScreenState extends State<SignInScreen> {
   final FocusNode _passwordNode = FocusNode();
 
   bool obscurePassword = true;
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   void dispose() {
