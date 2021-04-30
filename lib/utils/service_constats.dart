@@ -8,3 +8,5 @@ var chatsCollection = "chats";
 var lastMessage = "lastMessage";
 var messagesCollection = "messages";
 var userChats = "userChats";
+var userStatement = "userState";
+var isOnline = "isOnline";

@@ -53,6 +53,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         .createUser(user: user, password: password);
     hideLoading();
     if (res.errorText == null) {
+      passwordController.clear();
       _formState.currentState.reset();
 
       Navigator.of(context).push(MaterialPageRoute(builder: (c) => Home()));

@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:talk/models/user.dart';
+import 'package:talk/pages/chat_screen.dart';
 import 'package:talk/services/talk_base.dart';
 import 'package:talk/utils/helpers.dart';
+import 'package:talk/utils/service_constats.dart';
 import 'package:talk/utils/style_helpers.dart';
+import 'package:talk/widgets/helperWidgets.dart';
 
 class UsersScreen extends StatefulWidget {
   @override
@@ -39,12 +42,18 @@ class _UsersScreenState extends State<UsersScreen> {
           child: Padding(
             padding: formScaffoldPadding,
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 curentUserInfo(),
                 SizedBox(
                   height: 20,
                 ),
-                allUserInfo(),
+                allUser.length > 0
+                    ? allUserInfo()
+                    : Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [CircularProgressIndicator()],
+                      ),
               ],
             ),
           ),
@@ -66,13 +75,45 @@ class _UsersScreenState extends State<UsersScreen> {
           ),
           itemBuilder: (c, i) => ListTile(
             onTap: () async {
-              await TalkBase().chatServices.createChat(
+              var res = await TalkBase().chatServices.createChat(
                 chatUsers: [allUser[i], TalkBase().userServices.curentUser],
               );
+              if (res.done) {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                      builder: (c) => ChatScreen(
+                            chat: res.data,
+                          )),
+                );
+              }
             },
-            trailing: CircleAvatar(
-              radius: 5,
-              backgroundColor: Colors.green,
+            trailing: StreamBuilder(
+              builder: (c, s) {
+                switch (s.connectionState) {
+                  case ConnectionState.active:
+                    return s.data.data() != null
+                        ? CircleAvatar(
+                            radius: 5,
+                            backgroundColor: s.data.data()[isOnline]
+                                ? Colors.green
+                                : Colors.orange,
+                          )
+                        : CircleAvatar(
+                            radius: 5,
+                            backgroundColor: Colors.red,
+                          );
+
+                    break;
+                  default:
+                    Text("loading...");
+                    break;
+                }
+                return Text("loading...");
+              },
+              stream: TalkBase()
+                  .userServices
+                  .userStateStream(userId: allUser[i].id)
+                  .data,
             ),
             leading: CircleAvatar(
               radius: 30,
@@ -80,8 +121,14 @@ class _UsersScreenState extends State<UsersScreen> {
               backgroundImage:
                   NetworkImage(allUser[i].imageLink ?? dummyUserImage),
             ),
-            title: Text(allUser[i].nickName),
-            subtitle: Text(allUser[i].email),
+            title: Text(
+              allUser[i].nickName,
+              style: largeTextStyle(),
+            ),
+            subtitle: Text(
+              allUser[i].email,
+              style: midiumTextStyle(),
+            ),
           ),
           itemCount: allUser.length,
         ),
@@ -90,13 +137,16 @@ class _UsersScreenState extends State<UsersScreen> {
   Widget curentUserInfo() {
     print(TalkBase().userServices.curentUser.toJson());
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+      // crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        CircleAvatar(
-          radius: 55,
-          backgroundColor: Colors.grey[300],
-          backgroundImage: NetworkImage(
-            TalkBase().userServices.curentUser.imageLink ?? dummyUserImage,
+        Container(
+          height: 110,
+          width: 110,
+          child: CircleAvatar(
+            radius: 55,
+            backgroundColor: Colors.grey[200],
+            backgroundImage: NetworkImage(
+                TalkBase().userServices.curentUser.imageLink ?? dummyUserImage),
           ),
         ),
         SizedBox(

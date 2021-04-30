@@ -57,7 +57,6 @@ class ChatServices {
       if (chatResponse.errorText == null) {
         chats.add(chatResponse.data);
       }
-      print(chats);
     }
     return ServiceResponse(done: true, data: chats);
   }
@@ -128,9 +127,8 @@ class ChatServices {
     try {
       var chatExist =
           await isChatExist(firstUser: chatUsers[0], secondUser: chatUsers[1]);
-      print("chatExist :${chatExist.data}");
 
-      if (!chatExist.data) {
+      if (chatExist.data == null) {
         var newChatId = chatUsers.map((e) => e.id).toList().join("+");
         var newChat = Chat(chatId: newChatId, users: chatUsers);
 
@@ -149,7 +147,7 @@ class ChatServices {
             .add({"chatId": newChatId});
         return ServiceResponse(data: newChat, done: true);
       } else {
-        return ServiceResponse(data: chatAlreadyExist, done: true);
+        return ServiceResponse(data: chatExist.data, done: true);
       }
     } catch (e) {
       return ServiceResponse(done: false, errorText: e.toString());
@@ -165,10 +163,18 @@ class ChatServices {
           await store.collection(chatsCollection).doc(chatIdVariantOne).get();
       var chatExistWithVariantTwo =
           await store.collection(chatsCollection).doc(chatIdVariantTwo).get();
-      if (chatExistWithVariantTwo.exists || chatExistWithVariantOne.exists) {
-        return ServiceResponse(data: true, done: true);
+      if (chatExistWithVariantOne.exists) {
+        return ServiceResponse(
+            data: Chat.fromJson(chatExistWithVariantOne.data()), done: true);
       }
-      return ServiceResponse(data: false, done: true);
+      if (chatExistWithVariantTwo.exists) {
+        return ServiceResponse(
+            data: Chat.fromJson(chatExistWithVariantTwo.data()), done: true);
+      }
+      // if (chatExistWithVariantTwo.exists || chatExistWithVariantOne.exists) {
+      //   return ServiceResponse(data: true, done: true);
+      // }
+      return ServiceResponse(data: null, done: true);
     } catch (e) {
       return ServiceResponse(done: false, errorText: e.toString());
     }

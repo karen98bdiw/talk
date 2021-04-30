@@ -45,6 +45,35 @@ class UserServices {
     }
   }
 
+  Future<ServiceResponse> toogleUserState(
+      {bool isUserOnline, String userId}) async {
+    try {
+      await store
+          .collection(usersCollection)
+          .doc(userId)
+          .collection(userStatement)
+          .doc("0")
+          .set({isOnline: isUserOnline});
+      return ServiceResponse(
+        done: true,
+      );
+    } catch (e) {
+      return ServiceResponse(done: false);
+    }
+  }
+
+  ServiceResponse userStateStream({String userId}) {
+    return ServiceResponse(
+      done: true,
+      data: store
+          .collection(usersCollection)
+          .doc(userId)
+          .collection(userStatement)
+          .doc("0")
+          .snapshots(),
+    );
+  }
+
   Future<ServiceResponse> setCurentUser({userId}) async {
     try {
       var res = await getUserById(userId: userId);
@@ -64,6 +93,10 @@ class UserServices {
     try {
       user.id = userId;
       await store.collection(usersCollection).doc(userId).set(user.toJson());
+      await toogleUserState(
+        userId: userId,
+        isUserOnline: true,
+      );
       return ServiceResponse(done: true);
     } catch (e) {
       return ServiceResponse(done: false, errorText: e.toString());
@@ -96,10 +129,17 @@ class UserServices {
   }
 
   Future<bool> logOut() async {
+    print("logout was called");
     try {
+      await toogleUserState(
+        isUserOnline: false,
+        userId: curentUser.id,
+      );
       await FirebaseAuth.instance.signOut();
+
       return true;
     } catch (e) {
+      print("logout error${e.toString()}");
       return true;
     }
   }
@@ -108,6 +148,7 @@ class UserServices {
     try {
       var res = await store.collection(usersCollection).doc(userId).get();
       if (res.exists) {
+        await toogleUserState(isUserOnline: true, userId: userId);
         return ServiceResponse(
           done: true,
           data: customUser.User.fromJson(res.data()),

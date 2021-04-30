@@ -23,5 +23,10 @@ TextStyle titleStyle({isLight = false}) => TextStyle(
       fontWeight: FontWeight.w600,
     );
 
-TextStyle midiumTextStyle() =>
-    TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.w400);
+TextStyle midiumTextStyle() => TextStyle(
+    color: Colors.grey[400], fontSize: 18, fontWeight: FontWeight.w400);
+TextStyle largeTextStyle() => TextStyle(
+      color: Colors.black,
+      fontSize: 20,
+      fontWeight: FontWeight.w400,
+    );

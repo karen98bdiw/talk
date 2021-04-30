@@ -2,7 +2,8 @@ import 'package:talk/utils/enums.dart';
 
 var dummyUserImage =
     "https://library.kissclipart.com/20180901/krw/kissclipart-user-thumbnail-clipart-user-lorem-ipsum-is-simply-bfcb758bf53bea22.jpg";
-
+var dummyProfileImg =
+    "https://suryahospitals.com/jaipur/wp-content/uploads/sites/3/2020/07/dummy-user.jpg";
 String messageStateToString(MessageState state) {
   switch (state) {
     case MessageState.Sended:

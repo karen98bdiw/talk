@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:talk/models/chat.dart';
 import 'package:talk/pages/chat_screen.dart';
 import 'package:talk/services/talk_base.dart';
+import 'package:talk/utils/helpers.dart';
 import 'package:talk/utils/service_constats.dart';
+import 'package:talk/utils/style_helpers.dart';
 
 class ChatsScreen extends StatefulWidget {
   @override
@@ -19,7 +21,6 @@ class _ChatsScreenState extends State<ChatsScreen> {
       (TalkBase().chatServices.userChatsStream().data as Stream)
           .listen((event) {
         if (mounted) {
-          print("setStateCalling");
           getAllChats();
         }
       });
@@ -42,8 +43,12 @@ class _ChatsScreenState extends State<ChatsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
+        padding: formScaffoldPadding,
         height: MediaQuery.of(context).size.height * 0.5,
-        child: ListView.builder(
+        child: ListView.separated(
+          separatorBuilder: (c, i) => Divider(
+            thickness: 2,
+          ),
           itemBuilder: (c, i) => ListTile(
             onTap: () {
               Navigator.of(context).push(
@@ -54,19 +59,38 @@ class _ChatsScreenState extends State<ChatsScreen> {
                 ),
               );
             },
-            title: Text(allChats[i]
-                .users
-                .firstWhere((element) =>
-                    element.id != TalkBase().userServices.curentUser.id)
-                .nickName),
+            leading: CircleAvatar(
+              backgroundColor: Colors.grey[300],
+              backgroundImage: NetworkImage(
+                allChats[i]
+                        .users
+                        .firstWhere((element) =>
+                            element.id != TalkBase().userServices.curentUser.id)
+                        .imageLink ??
+                    dummyUserImage,
+              ),
+            ),
+            title: Text(
+              allChats[i]
+                  .users
+                  .firstWhere((element) =>
+                      element.id != TalkBase().userServices.curentUser.id)
+                  .nickName,
+              style: largeTextStyle(),
+            ),
             subtitle: StreamBuilder(
               builder: (c, s) {
                 switch (s.connectionState) {
                   case ConnectionState.active:
                     return s.data.data() != null
                         ? Text(
-                            s.data.data()[lastMessage]["text"] ?? "not exist")
-                        : Text("chat is empty");
+                            s.data.data()[lastMessage]["text"] ?? "not exist",
+                            style: midiumTextStyle(),
+                          )
+                        : Text(
+                            "chat is empty",
+                            style: midiumTextStyle(),
+                          );
 
                     break;
                   default:
@@ -77,6 +101,9 @@ class _ChatsScreenState extends State<ChatsScreen> {
                   .chatServices
                   .lastMessageStream(chatId: allChats[i].chatId)
                   .data,
+            ),
+            trailing: Icon(
+              Icons.messenger_outline_sharp,
             ),
           ),
           itemCount: allChats.length,

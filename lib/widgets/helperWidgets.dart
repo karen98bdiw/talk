@@ -84,10 +84,10 @@ showError({String errorText, String title, BuildContext context}) async {
   );
 }
 
-showLoading() async {
+showLoading({BuildContext context}) async {
   await showDialog(
     barrierDismissible: false,
-    context: navigatorKey.currentContext,
+    context: context ?? navigatorKey.currentContext,
     builder: (c) => Dialog(
       backgroundColor: Colors.transparent,
       shape: RoundedRectangleBorder(
@@ -131,8 +131,12 @@ showLoading() async {
   );
 }
 
-hideLoading() {
-  navigatorKey.currentState.pop();
+hideLoading({BuildContext context}) {
+  if (context != null) {
+    Navigator.of(context).pop();
+  } else {
+    navigatorKey.currentState.pop();
+  }
 }
 
 Future<bool> exitFromAppConfirmation(BuildContext context) async {
