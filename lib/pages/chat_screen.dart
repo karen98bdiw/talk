@@ -126,6 +126,21 @@ class _ChatScreenState extends State<ChatScreen> {
                 height: MediaQuery.of(context).size.height * 0.1,
                 child: Row(
                   children: [
+                    IconButton(
+                      icon: Icon(Icons.image),
+                      onPressed: () async {
+                        var res =
+                            await TalkBase().additionalServices.pickImage();
+                        var imgRes =
+                            await TalkBase().additionalServices.uploadToStorage(
+                                  file: res,
+                                );
+                        print(imgRes);
+                      },
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
                     Expanded(
                         child: CustomFormInput(
                       controller: _messageController,

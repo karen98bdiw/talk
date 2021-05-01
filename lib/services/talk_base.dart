@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:talk/services/additional_services.dart';
 import 'package:talk/services/chat_services.dart';
 import 'package:talk/services/user_services.dart';
 
@@ -19,6 +20,10 @@ class TalkBase {
   );
 
   ChatServices chatServices = ChatServices(
+    store: _store,
+  );
+
+  AdditionalServices additionalServices = AdditionalServices(
     store: _store,
   );
 }

@@ -8,17 +8,25 @@ class Message {
   String text;
   MessageState state;
   DateTime dateTime;
+  bool isLink;
 
   Message(
-      {this.receiverId, this.senderId, this.text, this.state, this.dateTime});
+      {this.receiverId,
+      this.senderId,
+      this.text,
+      this.state,
+      this.dateTime,
+      this.isLink = false});
 
   factory Message.fromJson(json) {
     return Message(
-        receiverId: json["receiverId"],
-        senderId: json["senderId"],
-        text: json["text"],
-        state: messageStateFromString(json["state"]),
-        dateTime: (json["dateTime"] as Timestamp).toDate());
+      receiverId: json["receiverId"],
+      senderId: json["senderId"],
+      text: json["text"],
+      state: messageStateFromString(json["state"]),
+      dateTime: (json["dateTime"] as Timestamp).toDate(),
+      isLink: json["isLink"],
+    );
   }
 
   Map<String, dynamic> toJson() {
@@ -28,6 +36,7 @@ class Message {
     data["senderId"] = this.senderId;
     data["text"] = this.text;
     data["state"] = messageStateToString(this.state);
+    data["isLink"] = this.isLink;
     return data;
   }
 }

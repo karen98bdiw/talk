@@ -29,6 +29,6 @@ TextStyle midiumTextStyle({Color color}) => TextStyle(
     fontWeight: FontWeight.w400);
 TextStyle largeTextStyle() => TextStyle(
       color: Colors.black,
-      fontSize: 20,
-      fontWeight: FontWeight.w400,
+      fontSize: 30,
+      fontWeight: FontWeight.w700,
     );
